@@ -2,15 +2,28 @@
 package sk.amir.maps
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Camera
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import org.maplibre.android.location.LocationComponentActivationOptions
+import org.maplibre.android.location.LocationComponentOptions
+import org.maplibre.android.location.engine.LocationEngineRequest
+import org.maplibre.android.location.modes.CameraMode
+import org.maplibre.android.location.permissions.PermissionsListener
+import org.maplibre.android.location.permissions.PermissionsManager
 import org.maplibre.android.maps.MapLibreMap
+import org.maplibre.android.maps.Style
+import sk.amir.maps.helpers.getActivity
+import kotlin.coroutines.suspendCoroutine
 
 @SuppressLint("MissingPermission")
 @Composable
 internal fun LoadUiSettings(
     uiSettings: MapUiSettings,
     currentMap: MapLibreMap?,
+    mapState: MapState,
 ) {
     LaunchedEffect(uiSettings.isCompassEnabled, currentMap) {
         currentMap?.uiSettings?.isCompassEnabled = uiSettings.isCompassEnabled
@@ -33,4 +46,10 @@ internal fun LoadUiSettings(
     LaunchedEffect(uiSettings.isAttributionEnabled, currentMap) {
         currentMap?.uiSettings?.isAttributionEnabled = uiSettings.isAttributionEnabled
     }
+
+    CurrentLocationPuckApplier(
+        currentLocationMode = uiSettings.currentLocationMode,
+        currentMap = currentMap,
+        mapStyle = mapState.style,
+    )
 }

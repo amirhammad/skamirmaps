@@ -16,7 +16,10 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import cocoapods.MapLibre.MLNCoordinateBounds
 import cocoapods.MapLibre.MLNMapView
+import cocoapods.MapLibre.MLNOrnamentVisibility
+import cocoapods.MapLibre.allowsTilting
 import platform.CoreGraphics.CGPoint
+import platform.CoreLocation.CLAuthorizationStatus
 import platform.CoreLocation.CLLocationCoordinate2D
 import platform.CoreLocation.kCLAuthorizationStatusNotDetermined
 import sk.amir.maps.common.LatLng
@@ -60,7 +63,7 @@ internal actual fun NativeComposeMap(
         }
     }
 
-    LoadUiSettings(uiSettings, mapView)
+    LoadUiSettings(uiSettings, mapView, locationAuthorization.value)
     UIKitView(
         factory = {
             MLNMapView()

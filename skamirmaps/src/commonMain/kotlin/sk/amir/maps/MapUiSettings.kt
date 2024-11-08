@@ -9,6 +9,14 @@ import kotlin.jvm.JvmOverloads
 
 @Stable
 class MapUiSettings @JvmOverloads constructor(applier: MapUiSettings.() -> Unit = {}) {
+    enum class CurrentLocationMode {
+        None,
+        Location,
+//        LocationAndCompass,
+//        TrackingLocation,
+//        TrackingLocationAndCompass
+    }
+
     var isAttributionEnabled: Boolean by mutableStateOf(false)
     var isLogoEnabled: Boolean by mutableStateOf(false)
     var isCompassEnabled: Boolean by mutableStateOf(false)
@@ -16,6 +24,7 @@ class MapUiSettings @JvmOverloads constructor(applier: MapUiSettings.() -> Unit 
     var isTiltGesturesEnabled: Boolean by mutableStateOf(true)
     var isZoomGesturesEnabled: Boolean by mutableStateOf(true)
     var isScrollGesturesEnabled: Boolean by mutableStateOf(true)
+    var currentLocationMode: CurrentLocationMode by mutableStateOf(CurrentLocationMode.Location)
 
     init {
         applier()
@@ -34,6 +43,7 @@ class MapUiSettings @JvmOverloads constructor(applier: MapUiSettings.() -> Unit 
         if (isTiltGesturesEnabled != other.isTiltGesturesEnabled) return false
         if (isZoomGesturesEnabled != other.isZoomGesturesEnabled) return false
         if (isScrollGesturesEnabled != other.isScrollGesturesEnabled) return false
+        if (currentLocationMode != other.currentLocationMode) return false
 
         return true
     }
@@ -46,6 +56,7 @@ class MapUiSettings @JvmOverloads constructor(applier: MapUiSettings.() -> Unit 
         result = 31 * result + isTiltGesturesEnabled.hashCode()
         result = 31 * result + isZoomGesturesEnabled.hashCode()
         result = 31 * result + isScrollGesturesEnabled.hashCode()
+        result = 31 * result + currentLocationMode.hashCode()
         return result
     }
 }

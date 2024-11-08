@@ -3,6 +3,8 @@ package sk.amir.maps
 
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
+import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.PointF
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.maplibre.android.MapLibre
+import org.maplibre.android.WellKnownTileServer
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.maps.MapLibreMap
@@ -74,7 +77,7 @@ internal actual fun NativeComposeMap(
 
     InitializeMap()
     mapView?.let { RegisterActivityCallbacksForMapView(it) }
-    LoadUiSettings(uiSettings, currentMap)
+    LoadUiSettings(uiSettings, currentMap, mapState)
 
     AndroidView(
         factory = { context ->
