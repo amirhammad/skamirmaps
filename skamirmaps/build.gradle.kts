@@ -1,3 +1,4 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.compose.internal.utils.getLocalProperty
 
 @Suppress("DSL_SCOPE_VIOLATION") //https://github.com/gradle/gradle/issues/22797
@@ -11,12 +12,13 @@ plugins {
     id("kotlin-parcelize")
     id("maven-publish")
     id("signing")
+    id("com.vanniktech.maven.publish")
     id("org.jetbrains.kotlin.native.cocoapods")
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
     id("com.google.cloud.artifactregistry.gradle-plugin") version "2.2.1"
 }
 
-version = "0.0.1"
+version = "0.0.1-SNAPSHOT"
 
 kotlin {
     withSourcesJar(publish = true)
@@ -132,4 +134,47 @@ android {
             )
         }
     }
+}
+mavenPublishing {
+    coordinates(
+        groupId = "com.composemap",
+        artifactId = "composemap-maplibre",
+        version = "0.0.1-SNAPSHOT"
+    )
+    pom {
+        name = project.name
+        val pom = this
+        inceptionYear.set("2024")
+        version = project.version as String
+        project.afterEvaluate {
+            // description seems to be only available after evaluation
+            pom.description.set(project.description)
+        }
+        url.set("https://github.com/skamirmaps/skamirmaps")
+        licenses {
+            license {
+                name.set("Mozilla Public License Version 2.0")
+                url.set("https://www.mozilla.org/en-US/MPL/2.0/")
+            }
+        }
+        developers {
+            developer {
+                id.set("amirhammad")
+                name.set("Amir Hammad")
+                email.set("hi@amir.sk")
+            }
+        }
+        scm {
+            connection.set("scm:git:github.com/skamirmaps/skamirmaps.git")
+            developerConnection.set("scm:git:ssh://github.com/skamirmaps/skamirmaps.git")
+            url.set("https://github.com/skamirmaps/skamirmaps/tree/main")
+        }
+    }
+    val sonatypeHost = if ((project.version as String).endsWith("SNAPSHOT")) {
+        SonatypeHost.S01
+    } else {
+        SonatypeHost.CENTRAL_PORTAL
+    }
+    publishToMavenCentral(sonatypeHost)
+    signAllPublications()
 }
